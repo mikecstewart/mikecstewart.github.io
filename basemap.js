@@ -41,8 +41,10 @@ let myMapControl = L.control.layers({
     "Geolandbasemap" : myLayers.geolandbasemap,
     "Overlay" : myLayers.bmapoverlay,
     "Grau" : myLayers.bmapgrau,
-    "Hidpi" : myLayers.bmaphidpi,
+    "Highdpi" : myLayers.bmaphidpi,
     "Orthofoto" : myLayers.bmaporthofoto30cm
+},{
+    "Overlay" : myLayers.bmapoverlay,
 });
 myMap.addControl(myMapControl);
 
