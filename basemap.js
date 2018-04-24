@@ -1,12 +1,15 @@
 
-let myMap = L.map("mapdiv");
+let myMap = L.map("mapdiv");    //http://leafletjs.com/reference-1.3.0.html#map-l-map
 let myLayers = {
     
-    osm : L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"),
-
+    osm : L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {    //http://leafletjs.com/reference-1.3.0.html#tilelayer-l-tilelayer
+        subdomains : ["a","b","c"],
+        attribution : "Datenquelle: <a href='https://www.openstreetmap.org'> openstreetmap.at </a>"
+    }
+),
     geolandbasemap : L.tileLayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
-        subdomains : ["maps","maps1","maps2","maps3","maps4"],
-        attribution : "Datenquelle: <a href='https://www.basemap.at'>basemap.at</a>"
+        subdomains : ["maps","maps1","maps2","maps3","maps4"],  //http://leafletjs.com/reference-1.3.0.html#tilelayer-subdomains
+        attribution : "Datenquelle: <a href='https://www.basemap.at'>basemap.at</a>"    //http://leafletjs.com/reference-1.3.0.html#layer-attribution
     }
 ),
 
@@ -34,9 +37,9 @@ let myLayers = {
     }
 ),
 };
-myMap.addLayer(myLayers.geolandbasemap);
+myMap.addLayer(myLayers.geolandbasemap);    //http://leafletjs.com/reference-1.3.0.html#layer-onadd
 
-let myMapControl = L.control.layers({
+let myMapControl = L.control.layers({   //http://leafletjs.com/reference-1.3.0.html#control-layers-l-control-layers
     "Openstreetmap" : myLayers.osm,
     "Geolandbasemap" : myLayers.geolandbasemap,
     "Overlay" : myLayers.bmapoverlay,
@@ -45,9 +48,17 @@ let myMapControl = L.control.layers({
     "Orthofoto" : myLayers.bmaporthofoto30cm
 },{
     "Overlay" : myLayers.bmapoverlay,
+}, {
+    collapsed : false       //http://leafletjs.com/reference-1.3.0.html#control-layers-collapsed
 });
-myMap.addControl(myMapControl);
 
+myMap.addControl(myMapControl);     //http://leafletjs.com/reference-1.3.0.html#map-addcontrol
 
+myMap.setView([47.267,11.383], 11); //http://leafletjs.com/reference-1.3.0.html#map-setview
 
-myMap.setView([47.267,11.383], 11);
+L.control.scale({   //http://leafletjs.com/reference-1.3.0.html#control-scale-l-control-scale
+    position: 'bottomleft',         //http://leafletjs.com/reference-1.3.0.html#control-scale-position
+    maxWidth: 200,      //http://leafletjs.com/reference-1.3.0.html#control-scale-maxwidth
+    metric: true,       //http://leafletjs.com/reference-1.3.0.html#control-scale-metric
+    imperial: false,    //http://leafletjs.com/reference-1.3.0.html#control-scale-imperial
+    }).addTo(myMap);
