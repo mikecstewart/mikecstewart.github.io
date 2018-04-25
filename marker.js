@@ -1,5 +1,6 @@
 
 let myMap = L.map("mapdiv");    //http://leafletjs.com/reference-1.3.0.html#map-l-map
+let markerGroup = L.featureGroup()
 let myLayers = {
     
     osm : L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {    //http://leafletjs.com/reference-1.3.0.html#tilelayer-l-tilelayer
@@ -48,6 +49,7 @@ let myMapControl = L.control.layers({   //http://leafletjs.com/reference-1.3.0.h
     "Orthofoto" : myLayers.bmaporthofoto30cm
 },{
     "Overlay" : myLayers.bmapoverlay,
+    "Marker": markerGroup,
 }, {
     collapsed : false       //http://leafletjs.com/reference-1.3.0.html#control-layers-collapsed
 });
@@ -62,3 +64,32 @@ L.control.scale({                    //http://leafletjs.com/reference-1.3.0.html
     metric: true,                   //http://leafletjs.com/reference-1.3.0.html#control-scale-metric
     imperial: false,                //http://leafletjs.com/reference-1.3.0.html#control-scale-imperial
     }).addTo(myMap);
+
+const uni = [47.264, 11.385];
+const usi = [47.257, 11.356];
+const technik = [47.263, 11.343];
+const igls = [47.2308, 11.4089];
+const patscherkofel = [47.209, 11.461];
+const markerOptions = {
+    title: "Universität Innsbruck",
+    opacity: 0.7,
+    draggable: true
+};
+L.marker(uni, markerOptions).addTo(markerGroup);
+L.marker(usi, markerOptions).addTo(markerGroup);
+L.marker(technik, markerOptions).addTo(markerGroup);
+L.marker(igls, markerOptions).addTo(markerGroup);
+
+let patscherkofelMarker = L.marker(patscherkofel, markerOptions).addTo(markerGroup);
+patscherkofelMarker.bindPopup("<p>Patscherkofel von der Nordkette aus</p><img style='width:200px' src='https://apps.tirol.gv.at/luft/patscherkofel.jpg' alt='patscherkofel' />");
+//Popup Bild von Patscherkofel eingefügt, Größe des Bildes definiert mit 200px, Link aus Internet eingefügt
+
+let lift = L.polyline([igls, patscherkofel], {
+    color: 'blue'
+});
+myMap.addLayer(lift);
+
+let uniPolygon = L.polygon([uni, usi, technik]);
+myMap.addLayer(uniPolygon);
+
+myMap.fitBounds(markerGroup.getBounds());
