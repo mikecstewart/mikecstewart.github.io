@@ -36,6 +36,8 @@ let awsdata = [ //Daten Wetterstationen
     
 let markerGroup = L.featureGroup();
 
+myMap.setView([47.267,11.383], 11);
+
 let myLayers = { //http://leafletjs.com/reference-1.3.0.html#tilelayer-l-tilelayer
 
     geolandbasemap : L.tileLayer (
@@ -52,7 +54,6 @@ let myLayers = { //http://leafletjs.com/reference-1.3.0.html#tilelayer-l-tilelay
     ),
 };
 
-
 myMap.addLayer(myLayers.geolandbasemap); 
 myMap.addLayer(markerGroup);
 
@@ -68,43 +69,24 @@ let myMapControl = L.control.layers({ // http://leafletjs.com/reference-1.3.0.ht
 myMap.addControl(myMapControl); // http://leafletjs.com/reference-1.3.0.html#map-addcontrol
 
 
-
-L.control.scale({ //http://leafletjs.com/reference-1.3.0.html#control-scale-l-control-scale
-    position: "bottomleft", // http://leafletjs.com/reference-1.3.0.html#control-position
-    maxWidth: 200, // http://leafletjs.com/reference-1.3.0.html#control-scale-maxwidth
-    metric: true, // http://leafletjs.com/reference-1.3.0.html#control-scale-metric
-    imperial: false, // http://leafletjs.com/reference-1.3.0.html#control-scale-imperial
-    }
-).addTo(myMap);
+L.control.scale({                    //http://leafletjs.com/reference-1.3.0.html#control-scale-l-control-scale
+    position: 'bottomleft',         //http://leafletjs.com/reference-1.3.0.html#control-scale-position
+    maxWidth: 200,                  //http://leafletjs.com/reference-1.3.0.html#control-scale-maxwidth
+    metric: true,                   //http://leafletjs.com/reference-1.3.0.html#control-scale-metric
+    imperial: false,                //http://leafletjs.com/reference-1.3.0.html#control-scale-imperial
+    }).addTo(myMap);
 
 
 const markerOptions = {
-    title: "Universität Innsbruck", 
-    opacity: 1,
-    draggable: false,
-};
-const markerOptions2 = {
-    title: "Nicht Uni", 
+    title: "Wetterstationen Tirol", 
     opacity: 1,
     draggable: false,
 };
 
+for (let i = 0; i <awsdata.length; i++) {
+    wetterstationen = awsdata[i];
+    L.marker([wetterstationen.lat, wetterstationen.lng], markerOptions).addTo(markerGroup).bindPopup(wetterstationen.name + '<br/>' + 'Temperatur ' + wetterstationen.temperatur + '°C '+ '<br/>' + 'Datum und Uhrzeit ' + wetterstationen.datum + '<br/>' + wetterstationen.link);
+}
 
+myMap.fitBounds(markerGroup.getBounds());
 
-
-//let patscherKofelMarker = L.marker (patscher).addTo(markerGroup);
-//patscherKofelMarker.bindPopup("<p>Patscherkofel</p><img style = 'width:200px' src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/12-06-05-innsbruck-by-ralfr-014.jpg/1920px-12-06-05-innsbruck-by-ralfr-014.jpg' />"); //so geht es in lange
-
-//myMap.fitBounds(markerGroup.getBounds());
-
-//let line = L.polyline (
-//    [patscher, iglis], {
-//       color: 'red',
-//        weigth: 5,
-//    });
-//myMap.addLayer(line);
-
-//let uniPolygon = L.polygon([uni, usi, technik]);
-//myMap.addLayer (uniPolygon)
-
-//uniPolygon.bindPopup("Ende")
