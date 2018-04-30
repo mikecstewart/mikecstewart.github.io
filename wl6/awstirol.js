@@ -85,7 +85,7 @@ const markerOptions = {
 
 for (let i = 0; i <awsdata.length; i++) {
     wetterstationen = awsdata[i];
-    L.marker([wetterstationen.lat, wetterstationen.lng], markerOptions).addTo(markerGroup).bindPopup(wetterstationen.name + '<br/>' + 'Temperatur ' + wetterstationen.temperatur + '°C '+ '<br/>' + 'Datum und Uhrzeit ' + wetterstationen.datum + '<br/>' + wetterstationen.link);
+    L.marker([wetterstationen.lat, wetterstationen.lng], markerOptions).addTo(markerGroup).bindPopup(wetterstationen.name + '<br/>' + 'Temperatur ' + wetterstationen.temperatur + '°C '+ '<br/>' + 'Datum und Uhrzeit ' + wetterstationen.datum + '<br/>' + "<a href=" + wetterstationen.link + ">Link</a>");
 }
 
 myMap.fitBounds(markerGroup.getBounds());
