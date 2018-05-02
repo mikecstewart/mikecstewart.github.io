@@ -66,13 +66,41 @@ L.control.scale({                    //http://leafletjs.com/reference-1.3.0.html
     }).addTo(myMap);
 
     //console.log("Stationen: ", stationen);
+  
+async function addGeojson(url) {
+    console.log("URL wird geladen: ", url);
+    const response = await fetch(url); //Adresse von anderem Server herunterladen
+    console.log("Response: ", response);
+   const wiendata = await response.json();
+   console.log("GeoJson: ", wiendata);
+   const geojson = L.geoJSON(wiendata, {
+       style: function(feature) {
+           return { color: "#ff0000"};
+  
+       }, 
+       pointToLayer: function(geoJsonPoint, latlng) {
+           return L.marker(latlng, {
+               icon: L.icon({
+                   iconUrl: "moderntower.png"
+               })
+           });
+       }
+   });
+   spaziergang.addLayer(geojson);
+   myMap.fitBounds(spaziergang.getBounds());
 
-    myMap.addLayer(spaziergang);
-let geojson = L.geoJSON(orte).addTo(spaziergang);
-geojson.bindPopup(function(layer) {         //zu jedem Marker wird ein Popup hinzugefügt
+}    
+
+const url = "https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&srsName=EPSG:4326&outputFormat=json&typeName=ogdwien:SPAZIERPUNKTOGD,ogdwien:SPAZIERLINIEOGD"
+
+addGeojson(url);
+
+ myMap.addLayer(spaziergang);
+/* let geojson = L.geoJSON(orte).addTo(spaziergang);
+     geojson.bindPopup(function(layer) {         //zu jedem Marker wird ein Popup hinzugefügt
     const props = layer.feature.properties;     //props als verkürzte Schreibweise für layer.feature.properties
     const popupText = `<h1>${props.NAME}</h1>
     <p>${props.BEMERKUNG}</p>`;
-    return popupText;
-});         //ich muss pinkeln aber kann nicht gehen weil ich sonst alles verpasse
-myMap.fitBounds(spaziergang.getBounds());
+    return popupText; 
+});        */ 
+
