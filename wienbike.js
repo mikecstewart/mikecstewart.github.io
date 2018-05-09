@@ -1,6 +1,6 @@
 
 let myMap = L.map("mapdiv");    //http://leafletjs.com/reference-1.3.0.html#map-l-map
-const citybike = L.featureGroup();
+const citybike = L.markerClusterGroup();
 let myLayers = {
     
     osm : L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {    //http://leafletjs.com/reference-1.3.0.html#tilelayer-l-tilelayer
@@ -65,7 +65,8 @@ L.control.scale({                    //http://leafletjs.com/reference-1.3.0.html
     }).addTo(myMap);
 
     //console.log("Stationen: ", stationen);
-  
+
+
 async function addGeojson(url) {
     console.log("URL wird geladen: ", url);
     const response = await fetch(url); //Adresse von anderem Server herunterladen
@@ -88,18 +89,26 @@ async function addGeojson(url) {
    citybike.addLayer(geojson);
    myMap.fitBounds(citybike.getBounds());
 
-}    
+   geojson.bindPopup(function(layer){
+    const props = layer.feature.properties;
+    const popupText= `<h1>${props.STATION}</h1>`;
+    return popupText;
+});
+
+   const hash = new L.Hash(myMap);
+   console.log(citybike);
+   myMap.addControl( new L.Control.Search({
+       layer: citybike,
+        propertyName:'STATION'
+}) );
+}
 
 const url = "https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:CITYBIKEOGD&srsName=EPSG:4326&outputFormat=json"
 
 addGeojson(url);
 
  myMap.addLayer(citybike);
-/* let geojson = L.geoJSON(orte).addTo(spaziergang);
-     geojson.bindPopup(function(layer) {         //zu jedem Marker wird ein Popup hinzugefügt
-    const props = layer.feature.properties;     //props als verkürzte Schreibweise für layer.feature.properties
-    const popupText = `<h1>${props.NAME}</h1>
-    <p>${props.BEMERKUNG}</p>`;
-    return popupText; 
-});        */ 
+
+
+
 
