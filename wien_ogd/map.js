@@ -2,7 +2,7 @@
 let karte = L.map("divKarte");
 
 // Gruppe für GeoJSON Layer definieren
-let geojsonGruppe = L.featureGroup().addTo(karte);
+let geojsonGruppe = L.featureGroup().addTo(map);
 
 // Grundkartenlayer definieren
 const grundkartenLayer = {

@@ -1,24 +1,91 @@
-/*
-    Vorbereitung: GPX Track herunterladen und nach GeoJSON konvertieren
-    -------------------------------------------------------------------
-    Datenquelle https://www.data.gv.at/suche/?search-term=bike+trail+tirol&searchIn=catalog
-    Download Einzeletappen / Zur Ressource ...
-    Alle Dateien im unterverzeichnis data/ ablegen
-    Die .gpx Datei der eigenen Etappe als etappe00.gpx speichern
-    Die .gpx Datei über https://mapbox.github.io/togeojson/ in .geojson umwandeln und als etappe00.geojson speichern
-    Die etappe00.geojson Datei in ein Javascript Objekt umwandeln und als etappe00.geojson.js speichern
 
-    -> statt 00 natürlich die eigene Etappe (z.B. 01,02, ...25)
-*/
+let myMap = L.map("map");    //http://leafletjs.com/reference-1.3.0.html#map-l-map
+let bikeGroup = L.featureGroup().addTo(myMap)
+
+let myLayers = {
+    
+    osm : L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {    //http://leafletjs.com/reference-1.3.0.html#tilelayer-l-tilelayer
+        subdomains : ["a","b","c"],
+        attribution : "Datenquelle: <a href='https://www.openstreetmap.org'> openstreetmap.at </a>"
+    }
+),
+    geolandbasemap : L.tileLayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
+        subdomains : ["maps","maps1","maps2","maps3","maps4"],  //http://leafletjs.com/reference-1.3.0.html#tilelayer-subdomains
+        attribution : "Datenquelle: <a href='https://www.basemap.at'>basemap.at</a>"    //http://leafletjs.com/reference-1.3.0.html#layer-attribution
+    }
+),
+
+};
+myMap.addLayer(myLayers.geolandbasemap);    //http://leafletjs.com/reference-1.3.0.html#layer-onadd
+
+let myMapControl = L.control.layers({   //http://leafletjs.com/reference-1.3.0.html#control-layers-l-control-layers
+    "Openstreetmap" : myLayers.osm,
+    "Geolandbasemap" : myLayers.geolandbasemap,
+
+},{
+
+}, {
+    collapsed : false       //http://leafletjs.com/reference-1.3.0.html#control-layers-collapsed
+});
+
+myMap.addControl(myMapControl);     //http://leafletjs.com/reference-1.3.0.html#map-addcontrol
+
+myMap.setView([47.267,11.383], 11); //http://leafletjs.com/reference-1.3.0.html#map-setview
+
+L.control.scale({                    //http://leafletjs.com/reference-1.3.0.html#control-scale-l-control-scale
+    position: 'bottomleft',         //http://leafletjs.com/reference-1.3.0.html#control-scale-position
+    maxWidth: 200,                  //http://leafletjs.com/reference-1.3.0.html#control-scale-maxwidth
+    metric: true,                   //http://leafletjs.com/reference-1.3.0.html#control-scale-metric
+    imperial: false,                //http://leafletjs.com/reference-1.3.0.html#control-scale-imperial
+    }).addTo(myMap);
+
+const wenns = [47.167234, 10.729962];
+const landeck = [47.136962, 10.566817]
+const iconStart = L.icon({
+    iconUrl: "images/start.png"
+});
+const iconFinish= L.icon({
+    iconUrl: "images/finish.png"
+});
+
+const markerOptions1 = {
+    title: "Wenns - Landeck",
+    opactiy: 1,
+    dragable: false,
+    icon: iconStart,
+};
+const markerOptions2 = {
+    title: "Wenns - Landeck",
+    opactiy: 1,
+    dragable: false,
+    icon: iconFinish,
+};
+
+L.marker(wenns,markerOptions1).addTo(bikeGroup).bindPopup("<p><a href='https://de.wikipedia.org/wiki/Wenns'>Wenns im Pitztal</a></p>")
+L.marker(landeck,markerOptions2).addTo(bikeGroup).bindPopup("<p><a href='https://de.wikipedia.org/wiki/Landeck_(Tirol)'>Landeck</a></p>");
+
+  myMap.fitBounds(bikeGroup.getBounds());
+  
+
+
+const url = "https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&srsName=EPSG:4326&outputFormat=json&typeName=ogdwien:SPAZIERPUNKTOGD,ogdwien:SPAZIERLINIEOGD"
+
+
+ myMap.addLayer(bikeGroup);
+/* let geojson = L.geoJSON(orte).addTo(spaziergang);
+     geojson.bindPopup(function(layer) {         //zu jedem Marker wird ein Popup hinzugefügt
+    const props = layer.feature.properties;     //props als verkürzte Schreibweise für layer.feature.properties
+    const popupText = `<h1>${props.NAME}</h1>
+    <p>${props.BEMERKUNG}</p>`;
+    return popupText; 
+});        */ 
+
+
 
 // eine neue Leaflet Karte definieren
 
 // Grundkartenlayer mit OSM, basemap.at, Elektronische Karte Tirol (Sommer, Winter, Orthophoto jeweils mit Beschriftung) über L.featureGroup([]) definieren
 // WMTS URLs siehe https://www.data.gv.at/katalog/dataset/land-tirol_elektronischekartetirol
-
-// Maßstab metrisch ohne inch
-
-// Start- und Endpunkte der Route als Marker mit Popup, Namen, Wikipedia Link und passenden Icons für Start/Ziel von https://mapicons.mapsmarker.com/
 
 // GeoJSON Track als Linie in der Karte einzeichnen und auf Ausschnitt zoomen
 // Einbauen nicht über async, sondern über ein L.geoJSON() mit einem Javascript Objekt (wie beim ersten Stadtspaziergang Wien Beispiel)
