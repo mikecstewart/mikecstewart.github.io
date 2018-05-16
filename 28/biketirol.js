@@ -14,16 +14,32 @@ let myLayers = {
         attribution : "Datenquelle: <a href='https://www.basemap.at'>basemap.at</a>"    //http://leafletjs.com/reference-1.3.0.html#layer-attribution
     }
 ),
-
+    Summer : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_base_summer/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
+    attribution : "Datenquelle: <a href='https://www.kartetirol.at'>kartetirol.at</a>",
+    }
+), 
+    Winter : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_base_winter/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
+    attribution : "Datenquelle: <a href='https://www.kartetirol.at'>kartetirol.at</a>",
+    }
+), 
+Ortho : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_ortho/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
+    attribution : "Datenquelle: <a href='https://www.kartetirol.at'>kartetirol.at</a>",
+    }
+),
 };
+
 myMap.addLayer(myLayers.geolandbasemap);    //http://leafletjs.com/reference-1.3.0.html#layer-onadd
 
 let myMapControl = L.control.layers({   //http://leafletjs.com/reference-1.3.0.html#control-layers-l-control-layers
     "Openstreetmap" : myLayers.osm,
     "Geolandbasemap" : myLayers.geolandbasemap,
+    "Sommerkarte": myLayers.Summer,
+    "Winterkarte": myLayers.Winter,
+    "Orthokarte": myLayers.Ortho,
 
 },{
-
+    "Bmapoverlay" : myLayers.bmapoverlay,
+    "Route": bikeGroup,
 }, {
     collapsed : false       //http://leafletjs.com/reference-1.3.0.html#control-layers-collapsed
 });
@@ -72,15 +88,14 @@ const url = "https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&ve
 
 
  myMap.addLayer(bikeGroup);
-/* let geojson = L.geoJSON(orte).addTo(spaziergang);
-     geojson.bindPopup(function(layer) {         //zu jedem Marker wird ein Popup hinzugefügt
-    const props = layer.feature.properties;     //props als verkürzte Schreibweise für layer.feature.properties
-    const popupText = `<h1>${props.NAME}</h1>
-    <p>${props.BEMERKUNG}</p>`;
-    return popupText; 
-});        */ 
 
-
+ let geojson = L.geoJSON(toGeoJSON).addTo(bikeGroup);
+geojson.bindPopup(function(layer) {
+    //console.log("Layer for Popup:", layer.feature.geometry); 
+    const props = layer.feature.geometry;
+    const line = `<p>${props.coordinates}</p>`;
+    return line // popupText;
+});
 
 // eine neue Leaflet Karte definieren
 
