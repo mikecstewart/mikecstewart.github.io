@@ -2,7 +2,7 @@
 let karte = L.map("divKarte");
 
 // Gruppe für GeoJSON Layer definieren
-let geojsonGruppe = L.featureGroup().addTo(map);
+let geojsonGruppe = L.featureGroup().addTo(karte);
 
 // Grundkartenlayer definieren
 const grundkartenLayer = {
@@ -65,37 +65,70 @@ L.control.scale({
 }).addTo(karte);
 
 // asynchrone Funktion zum Laden eines GeoJSON Layers
-async function ladeGeojsonLayer(url) {
-    const response = await fetch(url);
+async function ladeGeojsonLayer(datenAttribute) {
+    console.log(datenAttribute.json)
+    const response = await fetch(datenAttribute.json);
     const response_json = await response.json();
 
     // GeoJSON Geometrien hinzufügen und auf Ausschnitt zoomen
-    const geojsonObjekt = L.geoJSON(response_json);
+    const geojsonObjekt = L.geoJSON(response_json, {
+        onEachFeature: function(feature,layer) {
+            let popup = "";
+            for (attribut in feature.properties) {
+            let wert = feature.properties[attribut];
+            if (wert && wert.toString().startsWith("http:")) {
+                popup += `${attribut}: <a href="${wert}">weblink</a><br>`;
+            } else {
+                popup += `${attribut}: ${wert}<br>`;
+                }
+            }
+            layer.bindPopup(popup, {
+                maxWidth : 600,
+            });
+        },
+        pointToLayer : function(geoJsonPoint, latlng) {
+            if (datenAttribute) {
+                return L.marker(latlng, {
+                    icon : L.icon({
+                        iconUrl : datenAttribute.icon,
+                        iconAnchor : [16,32],
+                        popupAnchor : [0,-32],
+                    })
+                })
+            } else {
+                return L.marker(latlng);
+            }
+        }
+    });
+
     geojsonGruppe.addLayer(geojsonObjekt);
     karte.fitBounds(geojsonGruppe.getBounds());
 }
-
-wienDatensaetze.sort(function(a,b) {
-    if (a.titel < b.titel) {
+//Alphabetische Ordnung
+wienDatensaetze.sort(function(a,b){
+    if(a.titel < b.titel) {
         return -1;
     } else if (a.titel > b.titel) {
         return 1;
     } else {
         return 0;
     }
-})
+});
 
-// den GeoJSON Layer für Grillplätze laden
-ladeGeojsonLayer(wienDatensaetze[0].json);
 
-//Vorschleife einbauen
+// den GeoJSON Layer für Grillplätze laden (hier wird das Pulldown Menü geladen)
+ladeGeojsonLayer(wienDatensaetze[0]);
 let layerAuswahl = document.getElementById("layerAuswahl");
-for (datensatz of wienDatensaetze) {
-    layerAuswahl.innerHTML += `<option value="${datensatz.json}">${datensatz.titel}</option>`
-}
+for (let i=0; i<wienDatensaetze.length; i++) {
+    layerAuswahl.innerHTML += `<option value="${i}">${wienDatensaetze[i].titel}</option>`
+   // console.log(i,wienDatensaetze[i].titel)
+};
 
-layerAuswahl.onchange = function(evt) {
+layerAuswahl.onchange = function(evt){
     geojsonGruppe.clearLayers();
-    ladeGeojsonLayer(evt.target.value);
-}
+    let i = evt.target.value;
+    console.log(i,wienDatensaetze[i])
+    ladeGeojsonLayer(wienDatensaetze[i]);
+};
+
 

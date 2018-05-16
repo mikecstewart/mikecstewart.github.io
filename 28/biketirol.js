@@ -14,15 +14,15 @@ let myLayers = {
         attribution : "Datenquelle: <a href='https://www.basemap.at'>basemap.at</a>"    //http://leafletjs.com/reference-1.3.0.html#layer-attribution
     }
 ),
-    Summer : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_base_summer/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
+    summer : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_base_summer/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
     attribution : "Datenquelle: <a href='https://www.kartetirol.at'>kartetirol.at</a>",
     }
 ), 
-    Winter : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_base_winter/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
+    winter : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_base_winter/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
     attribution : "Datenquelle: <a href='https://www.kartetirol.at'>kartetirol.at</a>",
     }
 ), 
-Ortho : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_ortho/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
+    ortho : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_ortho/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
     attribution : "Datenquelle: <a href='https://www.kartetirol.at'>kartetirol.at</a>",
     }
 ),
@@ -33,9 +33,9 @@ myMap.addLayer(myLayers.geolandbasemap);    //http://leafletjs.com/reference-1.3
 let myMapControl = L.control.layers({   //http://leafletjs.com/reference-1.3.0.html#control-layers-l-control-layers
     "Openstreetmap" : myLayers.osm,
     "Geolandbasemap" : myLayers.geolandbasemap,
-    "Sommerkarte": myLayers.Summer,
-    "Winterkarte": myLayers.Winter,
-    "Orthokarte": myLayers.Ortho,
+    "Sommerkarte": myLayers.summer,
+    "Winterkarte": myLayers.winter,
+    "Orthokarte": myLayers.ortho,
 
 },{
     "Bmapoverlay" : myLayers.bmapoverlay,
