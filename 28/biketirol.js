@@ -1,5 +1,7 @@
 
-let myMap = L.map("map");    //http://leafletjs.com/reference-1.3.0.html#map-l-map
+let myMap = L.map("map", {
+    fullscreencontrol: true
+});    
 let bikeGroup = L.featureGroup().addTo(myMap)
 
 let myLayers = {
@@ -89,12 +91,19 @@ const url = "https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&ve
 
  myMap.addLayer(bikeGroup);
 
- let geojson = L.geoJSON(toGeoJSON).addTo(bikeGroup);
+ /*let geojson = L.geoJSON(toGeoJSON).addTo(bikeGroup);
 geojson.bindPopup(function(layer) {
     //console.log("Layer for Popup:", layer.feature.geometry); 
     const props = layer.feature.geometry;
     const line = `<p>${props.coordinates}</p>`;
     return line // popupText;
+});*/
+
+let gpxTrack = new L.GPX("data/etappe28.gpx", {
+    async : true,
+}).addTo(bikeGroup);
+gpxTrack.on("loaded", function(evt) {
+    myMap.fitBounds(evt.target.getBounds());
 });
 
 // eine neue Leaflet Karte definieren
