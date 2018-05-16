@@ -103,6 +103,13 @@ let gpxTrack = new L.GPX("data/etappe28.gpx", {
     async : true,
 }).addTo(bikeGroup);
 gpxTrack.on("loaded", function(evt) {
+    console.log("get_distance",evt.target.get_distance().toFixed(0))
+    console.log("get_elevation_min",evt.target.get_elevation_min().toFixed(0))
+    console.log("get_elevation_max",evt.target.get_elevation_max().toFixed(0))
+    console.log("get_elevation_gain",evt.target.get_elevation_gain().toFixed(0))
+    console.log("get_elevation_loss",evt.target.get_elevation_loss().toFixed(0))
+    let laenge = evt.target.get_distance().toFixed(0);
+    document.getElementById("laenge").innerHTML = laenge;
     myMap.fitBounds(evt.target.getBounds());
 });
 
