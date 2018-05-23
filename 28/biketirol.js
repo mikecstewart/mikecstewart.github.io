@@ -117,29 +117,12 @@ gpxTrack.on("loaded", function(evt) {
     myMap.fitBounds(evt.target.getBounds());
 });
 
+gpxTrack.on('addLine', function(evt){
+    hoehenprofil.addData(evt.line);
+});
 
-
-//myMap.fitBounds(bikeGroup.getBounds());
-
-/*let geojson = L.geoJSON(toGeoJSON).addTo(bikeLine);
-geojson.bindPopup(function(layer) {
-    //console.log("Layer for Popup:", layer.feature.geometry); 
-    const props = layer.feature.geometry;
-    const line = `<p>${props.coordinates}</p>`;
-    return line // popupText;
-});*/
-// eine neue Leaflet Karte definieren
-
-// Grundkartenlayer mit OSM, basemap.at, Elektronische Karte Tirol (Sommer, Winter, Orthophoto jeweils mit Beschriftung) über L.featureGroup([]) definieren
-// WMTS URLs siehe https://www.data.gv.at/katalog/dataset/land-tirol_elektronischekartetirol
-
-// Maßstab metrisch ohne inch
-
-// Start- und Endpunkte der Route als Marker mit Popup, Namen, Wikipedia Link und passenden Icons für Start/Ziel von https://mapicons.mapsmarker.com/
-
-// GeoJSON Track als Linie in der Karte einzeichnen und auf Ausschnitt zoomen
-// Einbauen nicht über async, sondern über ein L.geoJSON() mit einem Javascript Objekt (wie beim ersten Stadtspaziergang Wien Beispiel)
-
-// Baselayer control für OSM, basemap.at, Elektronische Karte Tirol hinzufügen
-
-// Overlay controls zum unabhängigem Ein-/Ausschalten der Route und Marker hinzufügen*/
+let hoehenprofil = L.control.elevation({
+    position : "topright",
+    theme: "steelblue-theme",
+}).addTo(myMap); //Höhenprofil hinzufügen
+		
